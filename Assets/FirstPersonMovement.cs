@@ -35,4 +35,9 @@ public class FirstPersonMovement : MonoBehaviour
     {
         rb.velocity = moveDirection * moveSpeed + new Vector3(0, rb.velocity.y, 0);
     }
+
+    void OnButtonDown() 
+    {
+       
+    } 
 }
