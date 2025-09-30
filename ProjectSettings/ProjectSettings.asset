@@ -705,10 +705,10 @@ PlayerSettings:
     m_VersionCode: 1
     m_VersionName: 
   apiCompatibilityLevel: 6
-  cloudProjectId: 
+  cloudProjectId: f99987a8-9eed-4de8-bf55-fa246fb62614
   framebufferDepthMemorylessMode: 0
-  projectName: 
-  organizationId: 
+  projectName: JB-BlackBeltGame
+  organizationId: johnnycoolboi5
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
