@@ -13,7 +13,7 @@ public class teleport : MonoBehaviour
             Vector3 teleportPos = other.gameObject.transform.position;
             teleportPos.z = NextPortal.transform.position.z;
 
-
+            teleportPos.y = NextPortal.transform.position.y + 50f;
 
             other.gameObject.transform.position = NextPortal.transform.position;
             Debug.Log("WHATSUP");
