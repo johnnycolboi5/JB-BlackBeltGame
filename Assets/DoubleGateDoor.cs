@@ -13,12 +13,12 @@ public class DoubleGateDoor : MonoBehaviour
     private float leftTargetAngle = 0f;
     private float rightTargetAngle = 0f;
 
-    public bool HasKey;
-
+    public bool HasKey1;
+    public bool HasKey2;
 
     void Start ()
     {
-        HasKey = false;
+        HasKey1 = false;
     }
     void Update()
     {
@@ -27,7 +27,7 @@ public class DoubleGateDoor : MonoBehaviour
         float distance = Vector3.Distance(player.position, gateCenter);
 
         // Press E if close enough
-        if (distance <= interactDistance && Input.GetKeyDown(KeyCode.E) && HasKey == true)
+        if (distance <= interactDistance && Input.GetKeyDown(KeyCode.E) && HasKey1 == true)
         {
             isOpen = !isOpen;
             leftTargetAngle = isOpen ? openAngle : 0f;

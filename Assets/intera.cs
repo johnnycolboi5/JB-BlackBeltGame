@@ -23,7 +23,7 @@ public class intera : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.E))
             {
                 Debug.Log("Picked up key!");
-                doorScript.HasKey = true;
+                doorScript.HasKey1 = true;
                 Destroy(nearbyKey);
                 nearbyKey = null;
                 pickupUI = null;
