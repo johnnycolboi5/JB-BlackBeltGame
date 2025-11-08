@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Key
+  - Key2
+  - Key1
+  - Gate
   layers:
   - Default
   - TransparentFX

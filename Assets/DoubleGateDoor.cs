@@ -16,9 +16,12 @@ public class DoubleGateDoor : MonoBehaviour
     public bool HasKey1;
     public bool HasKey2;
 
+    public bool NeedsKey1;
+    public bool NeedsKey2;
     void Start ()
     {
         HasKey1 = false;
+        HasKey2 = false;
     }
     void Update()
     {
@@ -26,13 +29,25 @@ public class DoubleGateDoor : MonoBehaviour
         Vector3 gateCenter = (leftHinge.position + rightHinge.position) / 2f;
         float distance = Vector3.Distance(player.position, gateCenter);
 
-        // Press E if close enough
-        if (distance <= interactDistance && Input.GetKeyDown(KeyCode.E) && HasKey1 == true)
-        {
-            isOpen = !isOpen;
-            leftTargetAngle = isOpen ? openAngle : 0f;
-            rightTargetAngle = isOpen ? -openAngle : 0f; // opposite direction
+
+        if (NeedsKey1 == true) {
+            // Press E if close enough
+            if (distance <= interactDistance && Input.GetKeyDown(KeyCode.E) && HasKey1 == true)
+            {
+                isOpen = !isOpen;
+                leftTargetAngle = isOpen ? openAngle : 0f;
+                rightTargetAngle = isOpen ? -openAngle : 0f; // opposite direction
+            }
         }
+        if (NeedsKey2 == true) {
+            if (distance <= interactDistance && Input.GetKeyDown(KeyCode.E) && HasKey2 == true)
+            {
+                isOpen = !isOpen;
+                leftTargetAngle = isOpen ? openAngle : 0f;
+                rightTargetAngle = isOpen ? -openAngle : 0f; // opposite direction
+            }
+        } 
+    
 
         // Smoothly rotate left hinge
         float currentLeftAngle = Mathf.LerpAngle(leftHinge.localEulerAngles.y, leftTargetAngle, Time.deltaTime * speed);
@@ -44,7 +59,17 @@ public class DoubleGateDoor : MonoBehaviour
     }
 
 
-
+    public void ActivateKey()
+    {
+        if (NeedsKey1)
+        {
+            HasKey1 = true;
+        }
+        if (NeedsKey2)
+        {
+            HasKey2 = true;
+        }
+    }
 
   
 }

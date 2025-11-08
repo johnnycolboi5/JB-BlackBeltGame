@@ -39900,7 +39900,7 @@ GameObject:
   - component: {fileID: 310782756}
   m_Layer: 0
   m_Name: LeftGate
-  m_TagString: Untagged
+  m_TagString: Gate
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -51910,7 +51910,6 @@ GameObject:
   - component: {fileID: 422731084}
   - component: {fileID: 422731086}
   - component: {fileID: 422731090}
-  - component: {fileID: 422731091}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -52020,7 +52019,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 422731083}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10, y: 1.51, z: -16.8}
+  m_LocalPosition: {x: -22.24, y: 1.51, z: 9.2}
   m_LocalScale: {x: 0.5997401, y: 1.7643638, z: 0.21248074}
   m_Children:
   - {fileID: 973997800}
@@ -52043,19 +52042,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Door: {fileID: 7165729814774130981}
---- !u!114 &422731091
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 422731083}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f75bbc421144c0b4d808a9960a43dce2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Door: {fileID: 1569451491}
+  Door2: {fileID: 1569451491}
 --- !u!1001 &422811966
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -76272,7 +76259,7 @@ GameObject:
   - component: {fileID: 622601763}
   m_Layer: 0
   m_Name: key
-  m_TagString: Key
+  m_TagString: Key1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -190088,7 +190075,7 @@ GameObject:
   - component: {fileID: 1569451492}
   m_Layer: 0
   m_Name: SeperateCemetaryGate (1)
-  m_TagString: Untagged
+  m_TagString: Gate
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -190109,9 +190096,12 @@ MonoBehaviour:
   rightHinge: {fileID: 123911244}
   player: {fileID: 422731089}
   openAngle: -90
-  speed: 0.2
+  speed: 0.44
   interactDistance: 3.73
-  HasKey: 1
+  HasKey1: 0
+  HasKey2: 0
+  NeedsKey1: 0
+  NeedsKey2: 1
 --- !u!4 &1569451493
 Transform:
   m_ObjectHideFlags: 0
@@ -249737,7 +249727,7 @@ GameObject:
   - component: {fileID: 2070845581}
   m_Layer: 0
   m_Name: RightGate
-  m_TagString: Untagged
+  m_TagString: Gate
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -251306,6 +251296,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 894610994}
     m_Modifications:
+    - target: {fileID: 2005118110972993300, guid: db7b4988fff0e3d4fa56725f08a32fd1,
+        type: 3}
+      propertyPath: m_Convex
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2713269121762366753, guid: db7b4988fff0e3d4fa56725f08a32fd1,
         type: 3}
       propertyPath: m_RootOrder
@@ -251384,7 +251379,7 @@ PrefabInstance:
     - target: {fileID: 3381261350547148699, guid: db7b4988fff0e3d4fa56725f08a32fd1,
         type: 3}
       propertyPath: m_TagString
-      value: Key
+      value: Key2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: db7b4988fff0e3d4fa56725f08a32fd1, type: 3}
@@ -251407,6 +251402,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 422731089}
+--- !u!135 &2087912345
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2087912343}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0.2, z: 0.0038799066}
 --- !u!4 &2087912348 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2713269121762366753, guid: db7b4988fff0e3d4fa56725f08a32fd1,
@@ -258533,7 +258541,7 @@ GameObject:
   - component: {fileID: 5452322597581947836}
   m_Layer: 0
   m_Name: Gate Frame
-  m_TagString: Untagged
+  m_TagString: Gate
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -258922,7 +258930,7 @@ GameObject:
   - component: {fileID: 7165729814774130982}
   m_Layer: 0
   m_Name: SeperateCemetaryGate
-  m_TagString: Untagged
+  m_TagString: Gate
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -258945,7 +258953,10 @@ MonoBehaviour:
   openAngle: -90
   speed: 0.2
   interactDistance: 3.73
-  HasKey: 1
+  HasKey1: 0
+  HasKey2: 0
+  NeedsKey1: 1
+  NeedsKey2: 0
 --- !u!33 &7365000303746747218
 MeshFilter:
   m_ObjectHideFlags: 0
