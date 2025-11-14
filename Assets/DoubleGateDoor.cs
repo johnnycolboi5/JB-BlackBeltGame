@@ -7,7 +7,7 @@ public class DoubleGateDoor : MonoBehaviour
     public Transform player;        // Player object
     public float openAngle = 90f;   // How wide the left door swings
     public float speed = 2f;        // Swing speed
-    public float interactDistance = 3f; // Max distance from gate to interact
+    public float interactDistance = 20f; // Max distance from gate to interact
 
     private bool isOpen = false;
     private float leftTargetAngle = 0f;
