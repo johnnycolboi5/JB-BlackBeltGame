@@ -2,12 +2,12 @@
 
 public class DoubleGateDoor : MonoBehaviour
 {
-    public Transform leftHinge;     // Empty GameObject at left hinge
-    public Transform rightHinge;    // Empty GameObject at right hinge
-    public Transform player;        // Player object
-    public float openAngle = 90f;   // How wide the left door swings
-    public float speed = 2f;        // Swing speed
-    public float interactDistance = 20f; // Max distance from gate to interact
+    public Transform leftHinge;
+    public Transform rightHinge;
+    public Transform player;
+    public float openAngle = 90f;
+    public float speed = 2f;
+    public float interactDistance = 20f;
 
     private bool isOpen = false;
     private float leftTargetAngle = 0f;
@@ -18,58 +18,35 @@ public class DoubleGateDoor : MonoBehaviour
 
     public bool NeedsKey1;
     public bool NeedsKey2;
-    void Start ()
-    {
-        HasKey1 = false;
-        HasKey2 = false;
-    }
+
     void Update()
     {
-        // Distance from player to gate (use midpoint between hinges)
-        Vector3 gateCenter = (leftHinge.position + rightHinge.position) / 2f;
-        float distance = Vector3.Distance(player.position, gateCenter);
 
-
-        if (NeedsKey1 == true) {
-            // Press E if close enough
-            if (distance <= interactDistance && Input.GetKeyDown(KeyCode.E) && HasKey1 == true)
-            {
-                isOpen = !isOpen;
-                leftTargetAngle = isOpen ? openAngle : 0f;
-                rightTargetAngle = isOpen ? -openAngle : 0f; // opposite direction
-            }
-        }
-        if (NeedsKey2 == true) {
-            if (distance <= interactDistance && Input.GetKeyDown(KeyCode.E) && HasKey2 == true)
-            {
-                isOpen = !isOpen;
-                leftTargetAngle = isOpen ? openAngle : 0f;
-                rightTargetAngle = isOpen ? -openAngle : 0f; // opposite direction
-            }
-        } 
-    
-
-        // Smoothly rotate left hinge
-        float currentLeftAngle = Mathf.LerpAngle(leftHinge.localEulerAngles.y, leftTargetAngle, Time.deltaTime * speed);
+       // Debug.Log($"[{gameObject.name}] NeedsKey1={NeedsKey1}, HasKey1={HasKey1}, Dist={Vector3.Distance(player.position, (leftHinge.position + rightHinge.position) / 2f)}");
+        
+        // Rotate left hinge
+        float currentLeftAngle = Mathf.LerpAngle(
+            leftHinge.localEulerAngles.y, leftTargetAngle,
+            Time.deltaTime * speed);
         leftHinge.localEulerAngles = new Vector3(0, currentLeftAngle, 0);
 
-        // Smoothly rotate right hinge
-        float currentRightAngle = Mathf.LerpAngle(rightHinge.localEulerAngles.y, rightTargetAngle, Time.deltaTime * speed);
+        // Rotate right hinge
+        float currentRightAngle = Mathf.LerpAngle(
+            rightHinge.localEulerAngles.y, rightTargetAngle,
+            Time.deltaTime * speed);
         rightHinge.localEulerAngles = new Vector3(0, currentRightAngle, 0);
     }
 
-
-    public void ActivateKey()
+    public void ToggleDoor()
     {
-        if (NeedsKey1)
-        {
-            HasKey1 = true;
-        }
-        if (NeedsKey2)
-        {
-            HasKey2 = true;
-        }
+        isOpen = !isOpen;
+
+        leftTargetAngle = isOpen ? openAngle : 0f;
+        rightTargetAngle = isOpen ? -openAngle : 0f;
     }
 
-  
+
+
+ 
+
 }

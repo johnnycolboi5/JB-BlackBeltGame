@@ -1,38 +1,30 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using System.Collections;
+
 using TMPro;
 
 public class GraveyardMenu : MonoBehaviour
 {
-    [Header("Settings")]
     public float rayDistance = 10f;
-
-    [Header("Colors")]
     public Color normalColor = Color.green;
-    public Color hoverColor = new Color(0.6f, 0, 1f); // purple
-    public Color lockedColor = new Color(0.4f, 0, 0); // dark red
-
-    [Header("Sounds")]
+    public Color hoverColor = new Color(0.6f, 0, 1f);
+    public Color lockedColor = new Color(0.4f, 0, 0);
     public AudioClip hoverSound;
     public AudioClip lockedSound;
 
     private TextMeshPro hoveredText;
 
-    [Header("Level Unlocks")]
-    public bool level2Unlocked = false;
-    public bool level3Unlocked = false;
-
     void Start()
     {
-        // Load unlock states (persistent)
-        level2Unlocked = PlayerPrefs.GetInt("Level2Unlocked", 0) == 1;
-        level3Unlocked = PlayerPrefs.GetInt("Level3Unlocked", 0) == 1;
-
-        // Set up initial appearance of each tombstone
         TextMeshPro[] allTexts = FindObjectsOfType<TextMeshPro>();
+
         foreach (TextMeshPro text in allTexts)
         {
-            if (!IsLevelUnlocked(text.text))
+            text.fontMaterial = new Material(text.fontSharedMaterial);
+
+            if (!LevelUnlocks.IsLevelUnlocked(text.text))
                 SetLockedAppearance(text);
             else
                 SetNormalAppearance(text);
@@ -42,81 +34,77 @@ public class GraveyardMenu : MonoBehaviour
     void Update()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, rayDistance))
+        if (Physics.Raycast(ray, out RaycastHit hit, rayDistance))
         {
             TextMeshPro text = hit.collider.GetComponent<TextMeshPro>();
-
             if (text != null)
             {
-                // Hover start
-                if (hoveredText != text)
-                {
-                    ResetHover();
-                    hoveredText = text;
+                HandleHover(text, hit.point);
 
-                    if (IsLevelUnlocked(text.text))
-                    {
-                        hoveredText.color = hoverColor;
-                        if (hoverSound != null)
-                            AudioSource.PlayClipAtPoint(hoverSound, hit.point);
-                    }
-                }
-
-                // Click
                 if (Input.GetMouseButtonDown(0))
-                {
-                    string sceneName = text.text;
+                    HandleClick(text, hit.point);
 
-                    if (IsLevelUnlocked(sceneName))
-                    {
-                        if (Application.CanStreamedLevelBeLoaded(sceneName))
-                        {
-                            SceneManager.LoadScene(sceneName);
-                        }
-                        else
-                        {
-                            Debug.LogWarning("Scene not found: " + sceneName);
-                        }
-                    }
-                    else
-                    {
-                        // Locked feedback
-                        Debug.Log("Level is locked: " + sceneName);
-                        hoveredText.color = lockedColor * 1.5f; // brighten briefly
-                        if (lockedSound != null)
-                            AudioSource.PlayClipAtPoint(lockedSound, hit.point);
-                    }
-                }
+                return;
             }
-            else ResetHover();
         }
-        else ResetHover();
+
+        ResetHover();
     }
 
-    bool IsLevelUnlocked(string sceneName)
+    void HandleHover(TextMeshPro text, Vector3 hitPoint)
     {
-        switch (sceneName)
+        if (hoveredText == text) return;
+
+        ResetHover();
+        hoveredText = text;
+
+        if (LevelUnlocks.IsLevelUnlocked(text.text))
         {
-            case "Level 1": return true;
-            case "Level 2": return level2Unlocked;
-            case "Level 3": return level3Unlocked;
-            default: return true;
+            text.color = hoverColor;
+            if (hoverSound)
+                AudioSource.PlayClipAtPoint(hoverSound, hitPoint);
+        }
+    }
+
+    void HandleClick(TextMeshPro text, Vector3 hitPoint)
+    {
+        if (!LevelUnlocks.IsLevelUnlocked(text.text))
+        {
+            text.color = lockedColor * 1.5f;
+            if (lockedSound)
+                AudioSource.PlayClipAtPoint(lockedSound, hitPoint);
+            return;
+        }
+
+        if (PersistentGameManager.Instance == null) return;
+
+        string sceneToLoad = GetSceneNameForText(text.text);
+        PersistentGameManager.Instance.LoadSceneWithFade(sceneToLoad);
+    }
+
+    string GetSceneNameForText(string buttonText)
+    {
+        // Map display text to actual scene name
+        switch (buttonText.Replace(" ", ""))
+        {
+            case "Level1": return PersistentGameManager.Instance.Level1Scene;
+            case "Level2": return PersistentGameManager.Instance.Level2Scene;
+            case "Level3": return PersistentGameManager.Instance.Level3Scene;
+            default: return buttonText; // fallback: use text as scene name
         }
     }
 
     void ResetHover()
     {
-        if (hoveredText != null)
-        {
-            if (IsLevelUnlocked(hoveredText.text))
-                SetNormalAppearance(hoveredText);
-            else
-                SetLockedAppearance(hoveredText);
+        if (hoveredText == null) return;
 
-            hoveredText = null;
-        }
+        if (LevelUnlocks.IsLevelUnlocked(hoveredText.text))
+            SetNormalAppearance(hoveredText);
+        else
+            SetLockedAppearance(hoveredText);
+
+        hoveredText = null;
     }
 
     void SetLockedAppearance(TextMeshPro text)
@@ -133,20 +121,5 @@ public class GraveyardMenu : MonoBehaviour
         var mat = text.fontMaterial;
         mat.DisableKeyword("_EMISSION");
         mat.SetColor("_EmissionColor", Color.black);
-    }
-
-    // Optional: call these from other scripts when levels are completed
-    public void UnlockLevel2()
-    {
-        PlayerPrefs.SetInt("Level2Unlocked", 1);
-        PlayerPrefs.Save();
-        level2Unlocked = true;
-    }
-
-    public void UnlockLevel3()
-    {
-        PlayerPrefs.SetInt("Level3Unlocked", 1);
-        PlayerPrefs.Save();
-        level3Unlocked = true;
     }
 }
