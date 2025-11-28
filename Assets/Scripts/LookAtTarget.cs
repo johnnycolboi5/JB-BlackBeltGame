@@ -4,14 +4,23 @@ public class LookAtTarget : MonoBehaviour
 {
     public Transform target;
 
+    public int randomchance;
     void Update()
     {
-        if (target != null)
+        if (randomchance >= 1f)
         {
-            Vector3 lookPos = target.position - transform.position;
-            lookPos.y = 0; // ignore vertical rotation
-            Quaternion rotation = Quaternion.LookRotation(lookPos);
-            transform.rotation = rotation;
+            if (target != null)
+            {
+                Vector3 lookPos = target.position - transform.position;
+                lookPos.y = 0; // ignore vertical rotation
+                Quaternion rotation = Quaternion.LookRotation(lookPos);
+                transform.rotation = rotation;
+            }
         }
+    }
+
+    void Start ()
+    {
+        float randomchance = Random.Range(1f, 4f);
     }
 }

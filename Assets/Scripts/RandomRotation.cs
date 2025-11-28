@@ -15,7 +15,7 @@ public class RandomRotation : MonoBehaviour
         
         if (TreeMeshOptions.Length > 0)
         {
-            TreeMesh.mesh = TreeMeshOptions[Random.Range(0, TreeMeshOptions.Length)];
+           TreeMesh.mesh = TreeMeshOptions[Random.Range(0, TreeMeshOptions.Length)];
         }
     }
 

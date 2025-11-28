@@ -4,7 +4,8 @@ using UnityEngine.UI;
 public class FlashlightScript : MonoBehaviour
 {
     [Header("Flashlight Settings")]
-    public Light flashlightLight;     // Assign spotlight here
+    public Light hotspotLight;       // MAIN close-range bright spot
+    public Light throwLight;         // SECOND long-range dimmer light
     public float maxBattery = 100f;
     public float batteryDrainRate = 5f;      // per second when on
     public float batteryRechargeRate = 2f;   // per second when off
@@ -20,13 +21,26 @@ public class FlashlightScript : MonoBehaviour
 
     private float currentBattery;
     private bool isOn = false;
-    private float baseIntensity;
+
+    private float baseHotspotIntensity;
+    private float baseThrowIntensity;
 
     void Start()
     {
         currentBattery = maxBattery;
-        flashlightLight.enabled = false;
-        baseIntensity = flashlightLight.intensity;
+
+        // Ensure both lights start off
+        if (hotspotLight != null)
+        {
+            baseHotspotIntensity = hotspotLight.intensity;
+            hotspotLight.enabled = false;
+        }
+
+        if (throwLight != null)
+        {
+            baseThrowIntensity = throwLight.intensity;
+            throwLight.enabled = false;
+        }
 
         if (batteryBar != null)
             batteryBar.value = 1f; // Start full
@@ -45,8 +59,14 @@ public class FlashlightScript : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F) && currentBattery > 0f)
         {
             isOn = !isOn;
-            flashlightLight.enabled = isOn;
+            SetFlashlightState(isOn);
         }
+    }
+
+    void SetFlashlightState(bool state)
+    {
+        if (hotspotLight != null) hotspotLight.enabled = state;
+        if (throwLight != null) throwLight.enabled = state;
     }
 
     void HandleBattery()
@@ -57,8 +77,8 @@ public class FlashlightScript : MonoBehaviour
             if (currentBattery <= 0f)
             {
                 currentBattery = 0f;
-                flashlightLight.enabled = false;
                 isOn = false;
+                SetFlashlightState(false);
             }
         }
         else
@@ -69,29 +89,38 @@ public class FlashlightScript : MonoBehaviour
 
     void HandleFlicker()
     {
-        if (isOn && currentBattery / maxBattery <= flickerThreshold / 100f)
+        if (!isOn)
         {
-            // Random chance to flicker each frame
+            ResetIntensities();
+            return;
+        }
+
+        if (currentBattery / maxBattery <= flickerThreshold / 100f)
+        {
+            // Chance to flicker
             if (Random.value < flickerChance)
             {
-                flashlightLight.intensity = baseIntensity * Random.Range(flickerIntensityMin, flickerIntensityMax);
-            }
-            else
-            {
-                flashlightLight.intensity = baseIntensity;
+                float hotspotFlicker = baseHotspotIntensity * Random.Range(flickerIntensityMin, flickerIntensityMax);
+                float throwFlicker = baseThrowIntensity * Random.Range(flickerIntensityMin, flickerIntensityMax);
+
+                if (hotspotLight != null) hotspotLight.intensity = hotspotFlicker;
+                if (throwLight != null) throwLight.intensity = throwFlicker;
+                return;
             }
         }
-        else
-        {
-            flashlightLight.intensity = baseIntensity; // normal when not low
-        }
+
+        ResetIntensities();
+    }
+
+    void ResetIntensities()
+    {
+        if (hotspotLight != null) hotspotLight.intensity = baseHotspotIntensity;
+        if (throwLight != null) throwLight.intensity = baseThrowIntensity;
     }
 
     void UpdateUI()
     {
         if (batteryBar != null)
-        {
             batteryBar.value = currentBattery / maxBattery;
-        }
     }
 }

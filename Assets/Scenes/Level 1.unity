@@ -49218,7 +49218,7 @@ MonoBehaviour:
   openAngle: -90
   speed: 0.44
   interactDistance: 3.73
-  HasKey1: 0
+  HasKey1: 1
   HasKey2: 0
   NeedsKey1: 1
   NeedsKey2: 0
@@ -52305,7 +52305,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 422731083}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12.24, y: 1.51, z: -22.119}
+  m_LocalPosition: {x: 1.81, y: 1.51, z: -22.119}
   m_LocalScale: {x: 0.5997401, y: 1.7643638, z: 0.21248074}
   m_Children:
   - {fileID: 973997800}
@@ -60832,7 +60832,7 @@ TerrainCollider:
   m_GameObject: {fileID: 498199384}
   m_Material: {fileID: 0}
   m_Enabled: 1
-  m_TerrainData: {fileID: 15600000, guid: 4b190ff4bd5428f4a9fd0eb21d5604ac, type: 2}
+  m_TerrainData: {fileID: 15600000, guid: 67b31b56824212f4cb67dde43919cdfe, type: 2}
   m_EnableTreeColliders: 1
 --- !u!218 &498199386
 Terrain:
