@@ -4,6 +4,7 @@ public class KeyRandomizer : MonoBehaviour
 {
     [Header("Possible Key Locations")]
     public Transform[] possibleLocations; // Assign in inspector
+    public Transform spotLight;
 
     private void Start()
     {
@@ -18,7 +19,13 @@ public class KeyRandomizer : MonoBehaviour
 
         // Move the key to that location
         transform.position = possibleLocations[randomIndex].position;
-        transform.rotation = possibleLocations[randomIndex].rotation;
+        //transform.rotation = possibleLocations[randomIndex].rotation;
+
+        if (spotLight != null)
+        {
+            spotLight.position = possibleLocations[randomIndex].position;
+        }
+
 
         Debug.Log($"Key moved to location #{randomIndex}: {possibleLocations[randomIndex].name}");
     }
