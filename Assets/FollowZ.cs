@@ -16,7 +16,7 @@ public class FollowZ : MonoBehaviour
         Cube1.transform.position = cube1Pos;
 
 
-        Vector3 cube2Pos = Cube1.transform.position;
+        Vector3 cube2Pos = Cube2.transform.position;
 
         //Follow Player's Z-position
         cube2Pos.z = transform.position.z;
