@@ -20,7 +20,7 @@ public class LevelEndPortal : MonoBehaviour
             return;
 
         // Safely get or create the PersistentGameManager
-        PersistentGameManager manager = PersistentGameManager.GetInstance();
+        PersistentGameManager manager = PersistentGameManager.Instance;
 
         // Unlock the chosen level
         switch (unlockLevel)
