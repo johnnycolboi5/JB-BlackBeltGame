@@ -58,4 +58,10 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("Start Scene");
 
     }
+
+    public void LoadLevel1()
+    {
+        PersistentGameManager.Instance.LoadSceneWithFade("Level 1");
+        SceneManager.LoadScene("Level 1");
+    }
 }

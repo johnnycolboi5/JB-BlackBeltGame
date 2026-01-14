@@ -13,14 +13,18 @@ public class MapOnOff : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       if ( Input.GetKeyDown(KeyCode.M))
+        if (Input.GetKeyDown(KeyCode.M))
         {
-            Map.SetActive(false);
-
+            Map.SetActive(true);
         }
-       if ( Input.GetKeyUp(KeyCode.M))
+
+
+        if ( Input.GetKeyUp(KeyCode.M))
         {
             Map.SetActive(true);
         }
     }
+
+   
+
 }

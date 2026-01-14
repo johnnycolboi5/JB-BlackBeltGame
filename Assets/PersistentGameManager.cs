@@ -53,8 +53,12 @@ public class PersistentGameManager : MonoBehaviour
 
     public void LoadSceneWithFade(string sceneName)
     {
+        if (!gameObject.activeInHierarchy)
+            return;
+
         StartCoroutine(FadeOutLoadIn(sceneName));
     }
+
 
     private IEnumerator FadeOutLoadIn(string sceneName)
     {
@@ -88,14 +92,10 @@ public class PersistentGameManager : MonoBehaviour
     }
 
     // Auto-create instance if missing
-    public static PersistentGameManager GetInstance()
+    private void OnDestroy()
     {
-        if (Instance == null)
-        {
-            GameObject obj = new GameObject("PersistentGameManager");
-            Instance = obj.AddComponent<PersistentGameManager>();
-            Debug.Log("PersistentGameManager created at runtime!");
-        }
-        return Instance;
+        if (Instance == this)
+            Instance = null;
     }
+
 }
