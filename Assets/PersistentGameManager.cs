@@ -64,15 +64,16 @@ public class PersistentGameManager : MonoBehaviour
     {
         if (fadeImage != null)
             fadeImage.gameObject.SetActive(true);
+      
 
-        // Fade out
+      /*  // Fade out
         for (float t = 0; t <= 1f; t += Time.deltaTime * fadeSpeed)
         {
             if (fadeImage != null)
                 fadeImage.color = new Color(0, 0, 0, t);
             yield return null;
-        }
-
+        }*/
+ 
         // Async load
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
         while (!asyncLoad.isDone)

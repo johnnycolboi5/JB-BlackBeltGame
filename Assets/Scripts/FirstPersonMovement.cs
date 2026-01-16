@@ -53,6 +53,8 @@ public class FirstPersonMovement : MonoBehaviour
 
     void MovePlayer()
     {
+        Debug.Log(rb == null);
+        Debug.Log("Direction: " + moveDirection + " , Speed: " + moveSpeed);
         rb.velocity = moveDirection * moveSpeed + new Vector3(0, rb.velocity.y, 0);
     }
 

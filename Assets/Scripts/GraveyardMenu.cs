@@ -40,6 +40,8 @@ public class GraveyardMenu : MonoBehaviour
             TextMeshPro text = hit.collider.GetComponent<TextMeshPro>();
             if (text != null)
             {
+
+                Debug.Log(text.text);
                 HandleHover(text, hit.point);
 
                 if (Input.GetMouseButtonDown(0))
@@ -78,6 +80,8 @@ public class GraveyardMenu : MonoBehaviour
         }
 
         if (PersistentGameManager.Instance == null) return;
+
+        Debug.Log(text.text);
 
         string sceneToLoad = GetSceneNameForText(text.text);
         PersistentGameManager.Instance.LoadSceneWithFade(sceneToLoad);
