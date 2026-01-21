@@ -5,6 +5,9 @@ using System.Collections;
 
 public class intera : MonoBehaviour
 {
+
+    public Tutorial tutorial;
+
     public GameObject Door;
     public GameObject Door2;
     private DoubleGateDoor doorScript;
@@ -38,6 +41,16 @@ public class intera : MonoBehaviour
             if (nearbyKey.CompareTag("Key2"))
                 iHaveKey2 = true;
 
+            if (tutorial != null)
+            {
+                tutorial.ShowNextText();
+                
+            }
+            else
+            {
+                Debug.Log("YOU FORGOT TO ASSIGN THE SCRIPT IN THE UNITY YOU FOOL!!!");
+            }
+
             Destroy(nearbyKey);
             nearbyKey = null;
 
@@ -60,6 +73,11 @@ public class intera : MonoBehaviour
             {
                 doorSc.HasKey1 = true;
                 unlocked = true;
+                if (tutorial != null)
+                {
+                    tutorial.ShowNextText();
+
+                }
             }
 
             if (doorSc.NeedsKey2 && iHaveKey2)
