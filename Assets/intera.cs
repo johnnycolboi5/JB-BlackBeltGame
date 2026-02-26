@@ -2,6 +2,8 @@
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
+using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
+using TMPro;
 
 public class intera : MonoBehaviour
 {
@@ -16,6 +18,7 @@ public class intera : MonoBehaviour
     private GameObject nearbyKey;
     private GameObject nearbyDoor;
     private GameObject pickupUI;
+    public TextMeshProUGUI DoorText;
 
     private bool iHaveKey1 = false;
     private bool iHaveKey2 = false;
@@ -37,6 +40,7 @@ public class intera : MonoBehaviour
         {
             if (nearbyKey.CompareTag("Key1"))
                 iHaveKey1 = true;
+           
 
             if (nearbyKey.CompareTag("Key2"))
                 iHaveKey2 = true;
@@ -50,7 +54,7 @@ public class intera : MonoBehaviour
             {
                 Debug.Log("YOU FORGOT TO ASSIGN THE SCRIPT IN THE UNITY YOU FOOL!!!");
             }
-
+            DoorText.text = "Press E to open!";
             Destroy(nearbyKey);
             nearbyKey = null;
 
