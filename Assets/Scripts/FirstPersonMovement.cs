@@ -12,9 +12,13 @@ public class FirstPersonMovement : MonoBehaviour
 
     public Slider sprintBar; // Assign your UI slider in Inspector
 
+    public float jumpHeight = 2f; // Height of the jump
+    public LayerMask groundLayer; // Ground detection layer
+
     private float sprintTimer;
     private float cooldownTimer;
     private bool isCoolingDown = false;
+    private bool isGrounded;
 
     private float moveSpeed;
     private Rigidbody rb;
@@ -36,11 +40,13 @@ public class FirstPersonMovement : MonoBehaviour
         ProcessInputs();
         HandleSprint();
         UpdateSprintBar();
+        HandleJump(); // Check for jump input
     }
 
     void FixedUpdate()
     {
         MovePlayer();
+        CheckGroundStatus(); // Update whether player is grounded
     }
 
     void ProcessInputs()
@@ -55,7 +61,7 @@ public class FirstPersonMovement : MonoBehaviour
     {
         Debug.Log(rb == null);
         Debug.Log("Direction: " + moveDirection + " , Speed: " + moveSpeed);
-        rb.velocity = moveDirection * moveSpeed + new Vector3(0, rb.velocity.y, 0);
+        rb.velocity = new Vector3(moveDirection.x * moveSpeed, rb.velocity.y, moveDirection.z * moveSpeed);
     }
 
     void HandleSprint()
@@ -101,5 +107,21 @@ public class FirstPersonMovement : MonoBehaviour
         {
             sprintBar.value = sprintTimer / maxSprintTime;
         }
+    }
+
+    // Handle Jump logic
+    void HandleJump()
+    {
+        if (isGrounded && Input.GetKeyDown(KeyCode.Space)) // Jump when space is pressed
+        {
+            rb.AddForce(Vector3.up * jumpHeight, ForceMode.Impulse);
+        }
+    }
+
+    // Check if the player is grounded
+    void CheckGroundStatus()
+    {
+        // Cast a ray down to check if the player is on the ground
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, 1f, groundLayer);
     }
 }
