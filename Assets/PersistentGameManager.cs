@@ -5,7 +5,7 @@ using System.Collections;
 
 public class PersistentGameManager : MonoBehaviour
 {
-    public static Per0sistentGameManager Instance;
+    public static PersistentGameManager Instance;
 
     [Header("Fade Settings")]
     public Image fadeImage;
