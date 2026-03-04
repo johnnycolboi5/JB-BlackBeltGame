@@ -23,6 +23,9 @@ public class intera : MonoBehaviour
     private bool iHaveKey1 = false;
     private bool iHaveKey2 = false;
 
+    private bool portal = false;
+    private bool Gate = false;
+
     void Start()
     {
         doorScript = Door.GetComponent<DoubleGateDoor>();
@@ -93,7 +96,10 @@ public class intera : MonoBehaviour
             // If correct key is owned, toggle the door open
             if (unlocked)
             {
-                doorSc.ToggleDoor();
+             //   if (Collision.gameObject)
+               // {
+                    doorSc.ToggleDoor();
+                //}
             }
         }
     }
@@ -104,6 +110,7 @@ public class intera : MonoBehaviour
             collision.gameObject.CompareTag("Key2"))
         {
             nearbyKey = collision.gameObject;
+            
         }
 
         if (collision.gameObject.CompareTag("Gate"))
@@ -118,7 +125,7 @@ public class intera : MonoBehaviour
         {
             if (pickupUI != null)
                 pickupUI.SetActive(false);
-
+           Destroy(nearbyKey);
             nearbyKey = null;
             pickupUI = null;
         }

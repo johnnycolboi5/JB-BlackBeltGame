@@ -5,7 +5,8 @@ public class DirectionBar : MonoBehaviour
 {
     [Header("References")]
     public Transform player;
-    public Transform target;
+    public Transform originalTarget;
+    public Transform keyTransform;
     public RectTransform dot;
 
     [Header("Settings")]
@@ -13,35 +14,40 @@ public class DirectionBar : MonoBehaviour
     public float smoothSpeed = 10f;
 
     [Header("Flicker Settings")]
-    public float visibleDuration = 1f;   // dot ON time
-    public float hiddenDuration = 3f;    // dot OFF time
+    public float visibleDuration = 1f;
+    public float hiddenDuration = 3f;
 
     float barHalfWidth;
     float flickerTimer;
     bool isVisible = true;
     Image dotImage;
+    Transform currentTarget;
 
     void Start()
     {
         barHalfWidth = ((RectTransform)transform).rect.width / 2f;
         dotImage = dot.GetComponent<Image>();
-        flickerTimer = visibleDuration;   // start visible
+        flickerTimer = visibleDuration;
+
+        currentTarget = keyTransform != null ? keyTransform : originalTarget;
     }
 
     void Update()
     {
+        currentTarget = keyTransform != null ? keyTransform : originalTarget;
         UpdateDotPosition();
         UpdateFlicker();
     }
 
     void UpdateDotPosition()
     {
-        Vector3 toTarget = target.position - player.position;
+        if (currentTarget == null) return;
+
+        Vector3 toTarget = currentTarget.position - player.position;
         toTarget.y = 0f;
 
         float angle = Vector3.SignedAngle(player.forward, toTarget, Vector3.up);
         float normalized = Mathf.Clamp(angle / maxAngle, -1f, 1f);
-
         float targetX = normalized * barHalfWidth;
 
         Vector2 current = dot.anchoredPosition;
@@ -58,14 +64,12 @@ public class DirectionBar : MonoBehaviour
 
         if (isVisible && flickerTimer <= 0f)
         {
-            // switch to hidden
             isVisible = false;
             dotImage.enabled = false;
             flickerTimer = hiddenDuration;
         }
         else if (!isVisible && flickerTimer <= 0f)
         {
-            // switch to visible
             isVisible = true;
             dotImage.enabled = true;
             flickerTimer = visibleDuration;
