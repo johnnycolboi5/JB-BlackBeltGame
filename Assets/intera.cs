@@ -42,11 +42,17 @@ public class intera : MonoBehaviour
         if (nearbyKey != null && Input.GetKeyDown(KeyCode.E))
         {
             if (nearbyKey.CompareTag("Key1"))
+            {
                 iHaveKey1 = true;
-           
+
+            }
+
 
             if (nearbyKey.CompareTag("Key2"))
+            {
                 iHaveKey2 = true;
+
+            }
 
             if (tutorial != null)
             {
@@ -58,12 +64,12 @@ public class intera : MonoBehaviour
                 Debug.Log("YOU FORGOT TO ASSIGN THE SCRIPT IN THE UNITY YOU FOOL!!!");
             }
             DoorText.text = "Press E to open!";
-            Destroy(nearbyKey);
             nearbyKey = null;
 
             if (pickupUI != null)
+            {
                 pickupUI.SetActive(false);
-
+            }
             pickupUI = null;
         }
 
@@ -125,7 +131,7 @@ public class intera : MonoBehaviour
         {
             if (pickupUI != null)
                 pickupUI.SetActive(false);
-           Destroy(nearbyKey);
+         
             nearbyKey = null;
             pickupUI = null;
         }
