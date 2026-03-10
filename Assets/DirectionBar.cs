@@ -36,7 +36,7 @@ public class DirectionBar : MonoBehaviour
     {
         currentTarget = keyTransform != null ? keyTransform : originalTarget;
         UpdateDotPosition();
-        UpdateFlicker();
+      //  UpdateFlicker();
     }
 
     void UpdateDotPosition()
@@ -58,21 +58,21 @@ public class DirectionBar : MonoBehaviour
         );
     }
 
-    void UpdateFlicker()
-    {
-        flickerTimer -= Time.deltaTime;
+    //void UpdateFlicker()
+    //{
+    //    flickerTimer -= Time.deltaTime;
 
-        if (isVisible && flickerTimer <= 0f)
-        {
-            isVisible = false;
-            dotImage.enabled = false;
-            flickerTimer = hiddenDuration;
-        }
-        else if (!isVisible && flickerTimer <= 0f)
-        {
-            isVisible = true;
-            dotImage.enabled = true;
-            flickerTimer = visibleDuration;
-        }
-    }
+    //    if (isVisible && flickerTimer <= 0f)
+    //    {
+    //        isVisible = false;
+    //        dotImage.enabled = false;
+    //        flickerTimer = hiddenDuration;
+    //    }
+    //    else if (!isVisible && flickerTimer <= 0f)
+    //    {
+    //        isVisible = true;
+    //        dotImage.enabled = true;
+    //        flickerTimer = visibleDuration;
+    //    }
+    //}
 }
