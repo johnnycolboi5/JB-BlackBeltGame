@@ -26,10 +26,13 @@ public class intera : MonoBehaviour
     private bool portal = false;
     private bool Gate = false;
 
+    public GameObject keycheck;
+
     void Start()
     {
         doorScript = Door.GetComponent<DoubleGateDoor>();
         doorScript2 = Door2.GetComponent<DoubleGateDoor>();
+        keycheck.SetActive(false);
     }
 
     
@@ -44,14 +47,15 @@ public class intera : MonoBehaviour
             if (nearbyKey.CompareTag("Key1"))
             {
                 iHaveKey1 = true;
-
+                Destroy(nearbyKey);
+                keycheck.SetActive(true);
             }
 
 
             if (nearbyKey.CompareTag("Key2"))
             {
                 iHaveKey2 = true;
-
+                Destroy(nearbyKey);
             }
 
             if (tutorial != null)
@@ -116,6 +120,7 @@ public class intera : MonoBehaviour
             collision.gameObject.CompareTag("Key2"))
         {
             nearbyKey = collision.gameObject;
+           
             
         }
 

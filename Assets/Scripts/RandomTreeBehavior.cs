@@ -11,7 +11,7 @@ public class RandomTreeBehavior : MonoBehaviour
     [Header("Look At Settings")]
     public Transform target;
     private int lookAtChance; // 1 or 2
-
+    private int lookAtChancedeath;
     void Start()
     {
         // Random rotation
@@ -26,16 +26,21 @@ public class RandomTreeBehavior : MonoBehaviour
 
         // Decide if this tree will look at target (1 = yes, 2 = no)
         lookAtChance = Random.Range(1, 3); // gives 1 or 2
+        lookAtChancedeath = Random.Range(1, 3); // gives 1 or 2
     }
 
     void Update()
     {
-        if (lookAtChance == 1 && target != null)
+        if (lookAtChancedeath == 1 && target != null)
         {
-            Vector3 lookPos = target.position - transform.position;
-            lookPos.y = 0; // ignore vertical rotation
-            Quaternion rotation = Quaternion.LookRotation(lookPos);
-            transform.rotation = rotation;
+            Destroy(gameObject);
+            if (lookAtChance == 1 && target != null)
+            {
+                Vector3 lookPos = target.position - transform.position;
+                lookPos.y = 0; // ignore vertical rotation
+                Quaternion rotation = Quaternion.LookRotation(lookPos);
+                transform.rotation = rotation;
+            }
         }
     }
 }
