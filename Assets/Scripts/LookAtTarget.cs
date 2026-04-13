@@ -12,7 +12,7 @@ public class LookAtTarget : MonoBehaviour
             if (target != null)
             {
                 Vector3 lookPos = target.position - transform.position;
-                lookPos.y = 0; // ignore vertical rotation
+                lookPos.y = 0;
                 Quaternion rotation = Quaternion.LookRotation(lookPos);
                 transform.rotation = rotation;
             }

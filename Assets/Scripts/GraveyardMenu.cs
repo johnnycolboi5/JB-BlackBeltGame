@@ -89,13 +89,13 @@ public class GraveyardMenu : MonoBehaviour
 
     string GetSceneNameForText(string buttonText)
     {
-        // Map display text to actual scene name
+       
         switch (buttonText.Replace(" ", ""))
         {
             case "Level1": return PersistentGameManager.Instance.Level1Scene;
             case "Level2": return PersistentGameManager.Instance.Level2Scene;
             case "Level3": return PersistentGameManager.Instance.Level3Scene;
-            default: return buttonText; // fallback: use text as scene name
+            default: return buttonText; 
         }
     }
 

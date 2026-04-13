@@ -16,11 +16,11 @@ public class Movement : MonoBehaviour
 
     void Update()
     {
-        // --- Input ---
-        float horizontal = Input.GetAxisRaw("Horizontal"); // A/D
-        float vertical = Input.GetAxisRaw("Vertical");     // W/S
+    
+        float horizontal = Input.GetAxisRaw("Horizontal"); 
+        float vertical = Input.GetAxisRaw("Vertical");     
 
-        // Move in world space (X/Z only)
+        
         Vector3 direction = new Vector3(horizontal, 0f, vertical);
 
         if (direction.magnitude >= 0.1f)

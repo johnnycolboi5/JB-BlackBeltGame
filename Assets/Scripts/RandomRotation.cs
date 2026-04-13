@@ -7,7 +7,6 @@ public class RandomRotation : MonoBehaviour
     public MeshFilter TreeMesh;
     public Mesh[] TreeMeshOptions;
 
-    // Start is called before the first frame update
     void Start()
     {
         float randomAngle = Random.Range(1f, 361f);
@@ -19,9 +18,5 @@ public class RandomRotation : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 }

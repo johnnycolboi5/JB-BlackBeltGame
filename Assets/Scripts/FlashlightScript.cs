@@ -4,20 +4,20 @@ using UnityEngine.UI;
 public class FlashlightScript : MonoBehaviour
 {
     [Header("Flashlight Settings")]
-    public Light hotspotLight;       // MAIN close-range bright spot
-    public Light throwLight;         // SECOND long-range dimmer light
+    public Light hotspotLight;     
+    public Light throwLight;         
     public float maxBattery = 100f;
-    public float batteryDrainRate = 5f;      // per second when on
-    public float batteryRechargeRate = 2f;   // per second when off
+    public float batteryDrainRate = 5f;    
+    public float batteryRechargeRate = 2f;  
 
     [Header("Flicker Settings")]
-    public float flickerThreshold = 20f;     // below this %, flashlight flickers
-    public float flickerChance = 0.1f;       // chance to flicker each frame
-    public float flickerIntensityMin = 0.3f; // how dim it gets when flickering
-    public float flickerIntensityMax = 1f;   // normal brightness
+    public float flickerThreshold = 20f;   
+    public float flickerChance = 0.1f;     
+    public float flickerIntensityMin = 0.3f;
+    public float flickerIntensityMax = 1f;  
 
     [Header("UI")]
-    public Slider batteryBar; // Assign UI Slider
+    public Slider batteryBar;
 
     private float currentBattery;
     private bool isOn = false;
@@ -29,7 +29,7 @@ public class FlashlightScript : MonoBehaviour
     {
         currentBattery = maxBattery;
 
-        // Ensure both lights start off
+     
         if (hotspotLight != null)
         {
             baseHotspotIntensity = hotspotLight.intensity;
@@ -43,7 +43,7 @@ public class FlashlightScript : MonoBehaviour
         }
 
         if (batteryBar != null)
-            batteryBar.value = 1f; // Start full
+            batteryBar.value = 1f; 
     }
 
     void Update()
@@ -97,7 +97,7 @@ public class FlashlightScript : MonoBehaviour
 
         if (currentBattery / maxBattery <= flickerThreshold / 100f)
         {
-            // Chance to flicker
+           
             if (Random.value < flickerChance)
             {
                 float hotspotFlicker = baseHotspotIntensity * Random.Range(flickerIntensityMin, flickerIntensityMax);

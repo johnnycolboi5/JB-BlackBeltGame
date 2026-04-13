@@ -1,38 +1,50 @@
 ﻿using UnityEngine;
-using UnityEngine.UI; // Needed for UI elements
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody))]
 public class FirstPersonMovement : MonoBehaviour
 {
     public float walkSpeed = 5f;
     public float sprintSpeed = 15f;
-
-    public float maxSprintTime = 5f; // seconds you can sprint
-    public float sprintCooldown = 5f; // seconds to recover before sprinting again
-
-    public Slider sprintBar; // Assign your UI slider in Inspector
-
-    public float jumpHeight = 2f; // Height of the jump
-    public LayerMask groundLayer; // Ground detection layer
+    public float acceleration = 15f;  
+    public float deceleration = 20f;   
+    public float maxSprintTime = 5f;
+    public float sprintCooldown = 5f;
+    public Slider sprintBar;
+    public float jumpHeight = 2f;
+    public LayerMask groundLayer;
 
     private float sprintTimer;
     private float cooldownTimer;
     private bool isCoolingDown = false;
     private bool isGrounded;
-
     private float moveSpeed;
     private Rigidbody rb;
     private Vector3 moveDirection;
+    private Vector3 currentVelocity;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        rb.freezeRotation = true;
+
+      
+        Collider col = GetComponent<Collider>();
+        if (col != null)
+        {
+            PhysicMaterial frictionless = new PhysicMaterial();
+            frictionless.dynamicFriction = 0f;
+            frictionless.staticFriction = 0f;
+            frictionless.frictionCombine = PhysicMaterialCombine.Minimum;
+            col.material = frictionless;
+        }
+
         moveSpeed = walkSpeed;
         sprintTimer = maxSprintTime;
         cooldownTimer = 0f;
 
         if (sprintBar != null)
-            sprintBar.value = 1f; // Start full
+            sprintBar.value = 1f;
     }
 
     void Update()
@@ -40,52 +52,52 @@ public class FirstPersonMovement : MonoBehaviour
         ProcessInputs();
         HandleSprint();
         UpdateSprintBar();
-        HandleJump(); // Check for jump input
+        HandleJump();
     }
 
     void FixedUpdate()
     {
         MovePlayer();
-        CheckGroundStatus(); // Update whether player is grounded
+        CheckGroundStatus();
     }
 
     void ProcessInputs()
     {
         float moveX = Input.GetAxis("Horizontal");
         float moveZ = Input.GetAxis("Vertical");
-
         moveDirection = (transform.right * moveX + transform.forward * moveZ).normalized;
     }
 
     void MovePlayer()
     {
-        Debug.Log(rb == null);
-        Debug.Log("Direction: " + moveDirection + " , Speed: " + moveSpeed);
-        rb.velocity = new Vector3(moveDirection.x * moveSpeed, rb.velocity.y, moveDirection.z * moveSpeed);
+        Vector3 targetVelocity = moveDirection * moveSpeed;
+
+       
+        float rate = moveDirection.magnitude > 0.1f ? acceleration : deceleration;
+
+        currentVelocity = Vector3.MoveTowards(currentVelocity, targetVelocity, rate * Time.fixedDeltaTime);
+
+        rb.velocity = new Vector3(currentVelocity.x, rb.velocity.y, currentVelocity.z);
     }
 
     void HandleSprint()
     {
+        bool isMoving = moveDirection.magnitude > 0.1f; 
+
         if (isCoolingDown)
         {
             cooldownTimer -= Time.deltaTime;
             moveSpeed = walkSpeed;
-
-            // Recharge sprint slowly
             sprintTimer = Mathf.Min(sprintTimer + Time.deltaTime, maxSprintTime);
-
             if (cooldownTimer <= 0f)
-            {
                 isCoolingDown = false;
-            }
         }
         else
         {
-            if (Input.GetKey(KeyCode.LeftShift) && sprintTimer > 0f)
+            if (Input.GetKey(KeyCode.LeftShift) && sprintTimer > 0f && isMoving)
             {
                 moveSpeed = sprintSpeed;
                 sprintTimer -= Time.deltaTime;
-
                 if (sprintTimer <= 0f)
                 {
                     isCoolingDown = true;
@@ -95,7 +107,6 @@ public class FirstPersonMovement : MonoBehaviour
             else
             {
                 moveSpeed = walkSpeed;
-                // Recharge sprint when not sprinting
                 sprintTimer = Mathf.Min(sprintTimer + Time.deltaTime, maxSprintTime);
             }
         }
@@ -104,24 +115,17 @@ public class FirstPersonMovement : MonoBehaviour
     void UpdateSprintBar()
     {
         if (sprintBar != null)
-        {
             sprintBar.value = sprintTimer / maxSprintTime;
-        }
     }
 
-    // Handle Jump logic
     void HandleJump()
     {
-        if (isGrounded && Input.GetKeyDown(KeyCode.Space)) // Jump when space is pressed
-        {
+        if (isGrounded && Input.GetKeyDown(KeyCode.Space))
             rb.AddForce(Vector3.up * jumpHeight, ForceMode.Impulse);
-        }
     }
 
-    // Check if the player is grounded
     void CheckGroundStatus()
     {
-        // Cast a ray down to check if the player is on the ground
         isGrounded = Physics.Raycast(transform.position, Vector3.down, 1f, groundLayer);
     }
 }

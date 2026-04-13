@@ -2,11 +2,11 @@
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
-//using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
+using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
 using TMPro;
 
 public class intera : MonoBehaviour
-{
+{ 
 
     public Tutorial tutorial;
 
@@ -39,9 +39,7 @@ public class intera : MonoBehaviour
 
     void Update()
     {
-        // ======================
-        // KEY PICKUP
-        // ======================
+       
         if (nearbyKey != null && Input.GetKeyDown(KeyCode.E))
         {
             if (nearbyKey.CompareTag("Key1"))
@@ -77,9 +75,7 @@ public class intera : MonoBehaviour
             pickupUI = null;
         }
 
-        // ======================
-        // DOOR INTERACT
-        // ======================
+       
         if (nearbyDoor != null && Input.GetKeyDown(KeyCode.E))
         {
             DoubleGateDoor doorSc = nearbyDoor.GetComponentInParent<DoubleGateDoor>();
@@ -90,6 +86,10 @@ public class intera : MonoBehaviour
             {
                 doorSc.HasKey1 = true;
                 unlocked = true;
+
+                GetComponent<TargetPointer>().SwitchTarget();
+
+
                 if (tutorial != null)
                 {
                     tutorial.ShowNextText();
@@ -103,7 +103,7 @@ public class intera : MonoBehaviour
                 unlocked = true;
             }
 
-            // If correct key is owned, toggle the door open
+          
             if (unlocked)
             {
              //   if (Collision.gameObject)
