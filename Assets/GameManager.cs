@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     [Header("Menu")]
-    public GameObject pauseMenu;          // Assign your pause menu UI here
+    public GameObject pauseMenu;
+    public GameObject oppPause;
 
     [Header("Player Control")]
     public MonoBehaviour playerMovement;  // Your player movement script

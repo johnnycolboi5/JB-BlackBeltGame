@@ -2,17 +2,26 @@
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(AudioSource))]
 public class FirstPersonMovement : MonoBehaviour
 {
+    [Header("Movement")]
     public float walkSpeed = 5f;
     public float sprintSpeed = 15f;
-    public float acceleration = 15f;  
-    public float deceleration = 20f;   
+    public float acceleration = 15f;
+    public float deceleration = 20f;
     public float maxSprintTime = 5f;
     public float sprintCooldown = 5f;
     public Slider sprintBar;
     public float jumpHeight = 2f;
     public LayerMask groundLayer;
+
+    [Header("Footsteps")]
+    public AudioClip[] walkClips;
+    public AudioClip[] sprintClips;
+    public float walkStepInterval = 0.5f;
+    public float sprintStepInterval = 0.3f;
+    [Range(0f, 1f)] public float footstepVolume = 0.5f;
 
     private float sprintTimer;
     private float cooldownTimer;
@@ -23,12 +32,15 @@ public class FirstPersonMovement : MonoBehaviour
     private Vector3 moveDirection;
     private Vector3 currentVelocity;
 
+    private AudioSource audioSource;
+    private float stepTimer = 0f;
+    private int lastClipIndex = -1;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
 
-      
         Collider col = GetComponent<Collider>();
         if (col != null)
         {
@@ -38,6 +50,8 @@ public class FirstPersonMovement : MonoBehaviour
             frictionless.frictionCombine = PhysicMaterialCombine.Minimum;
             col.material = frictionless;
         }
+
+        audioSource = GetComponent<AudioSource>();
 
         moveSpeed = walkSpeed;
         sprintTimer = maxSprintTime;
@@ -53,6 +67,7 @@ public class FirstPersonMovement : MonoBehaviour
         HandleSprint();
         UpdateSprintBar();
         HandleJump();
+        HandleFootsteps();
     }
 
     void FixedUpdate()
@@ -71,18 +86,14 @@ public class FirstPersonMovement : MonoBehaviour
     void MovePlayer()
     {
         Vector3 targetVelocity = moveDirection * moveSpeed;
-
-       
         float rate = moveDirection.magnitude > 0.1f ? acceleration : deceleration;
-
         currentVelocity = Vector3.MoveTowards(currentVelocity, targetVelocity, rate * Time.fixedDeltaTime);
-
         rb.velocity = new Vector3(currentVelocity.x, rb.velocity.y, currentVelocity.z);
     }
 
     void HandleSprint()
     {
-        bool isMoving = moveDirection.magnitude > 0.1f; 
+        bool isMoving = moveDirection.magnitude > 0.1f;
 
         if (isCoolingDown)
         {
@@ -110,6 +121,40 @@ public class FirstPersonMovement : MonoBehaviour
                 sprintTimer = Mathf.Min(sprintTimer + Time.deltaTime, maxSprintTime);
             }
         }
+    }
+
+    void HandleFootsteps()
+    {
+        bool isMoving = moveDirection.magnitude > 0.1f;
+        bool isSprinting = moveSpeed == sprintSpeed;
+
+        if (isMoving && isGrounded)
+        {
+            stepTimer -= Time.deltaTime;
+            if (stepTimer <= 0f)
+            {
+                PlayFootstep(isSprinting ? sprintClips : walkClips);
+                stepTimer = isSprinting ? sprintStepInterval : walkStepInterval;
+            }
+        }
+        else
+        {
+            stepTimer = 0f; // Reset so first step plays immediately on next move
+        }
+    }
+
+    void PlayFootstep(AudioClip[] clips)
+    {
+        if (clips == null || clips.Length == 0) return;
+
+        int index;
+        do
+        {
+            index = Random.Range(0, clips.Length);
+        } while (clips.Length > 1 && index == lastClipIndex);
+
+        lastClipIndex = index;
+        audioSource.PlayOneShot(clips[index], footstepVolume);
     }
 
     void UpdateSprintBar()
