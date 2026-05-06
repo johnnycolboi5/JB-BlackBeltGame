@@ -56,13 +56,21 @@ public class GameManager : MonoBehaviour
 
     public void LoadStartScene()
     {
+        isPaused = false;
+        Time.timeScale = 1f;
+        LockCursor(false); // Start scene probably wants cursor visible
         SceneManager.LoadScene("Start Scene");
-
     }
 
     public void LoadLevel1()
     {
+        // Reset pause state before loading
+        isPaused = false;
+        Time.timeScale = 1f;
+        LockCursor(true);
+        if (playerMovement != null) playerMovement.enabled = true;
+        if (playerLook != null) playerLook.enabled = true;
+
         PersistentGameManager.Instance.LoadSceneWithFade("Level 1");
-        SceneManager.LoadScene("Level 1");
     }
 }

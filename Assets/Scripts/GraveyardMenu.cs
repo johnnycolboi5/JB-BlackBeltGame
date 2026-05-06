@@ -2,7 +2,6 @@
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
-
 using TMPro;
 
 public class GraveyardMenu : MonoBehaviour
@@ -13,17 +12,15 @@ public class GraveyardMenu : MonoBehaviour
     public Color lockedColor = new Color(0.4f, 0, 0);
     public AudioClip hoverSound;
     public AudioClip lockedSound;
-
+    public credits creditsScript; // Assign in Inspector
     private TextMeshPro hoveredText;
 
     void Start()
     {
         TextMeshPro[] allTexts = FindObjectsOfType<TextMeshPro>();
-
         foreach (TextMeshPro text in allTexts)
         {
             text.fontMaterial = new Material(text.fontSharedMaterial);
-
             if (!LevelUnlocks.IsLevelUnlocked(text.text))
                 SetLockedAppearance(text);
             else
@@ -34,34 +31,30 @@ public class GraveyardMenu : MonoBehaviour
     void Update()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
         if (Physics.Raycast(ray, out RaycastHit hit, rayDistance))
         {
             TextMeshPro text = hit.collider.GetComponent<TextMeshPro>();
             if (text != null)
             {
-
                 Debug.Log(text.text);
                 HandleHover(text, hit.point);
-
                 if (Input.GetMouseButtonDown(0))
                     HandleClick(text, hit.point);
-
                 return;
             }
         }
-
         ResetHover();
     }
 
     void HandleHover(TextMeshPro text, Vector3 hitPoint)
     {
         if (hoveredText == text) return;
-
         ResetHover();
         hoveredText = text;
 
-        if (LevelUnlocks.IsLevelUnlocked(text.text))
+        // Treat Credits as unlocked for hover purposes
+        bool isInteractable = LevelUnlocks.IsLevelUnlocked(text.text) || text.text == "Credits";
+        if (isInteractable)
         {
             text.color = hoverColor;
             if (hoverSound)
@@ -71,6 +64,16 @@ public class GraveyardMenu : MonoBehaviour
 
     void HandleClick(TextMeshPro text, Vector3 hitPoint)
     {
+        // Credits button
+        if (text.text == "Credits")
+        {
+            if (creditsScript != null)
+                creditsScript.turnOnScreen();
+            return;
+
+            Debug.Log("idkman");
+        }
+
         if (!LevelUnlocks.IsLevelUnlocked(text.text))
         {
             text.color = lockedColor * 1.5f;
@@ -80,34 +83,30 @@ public class GraveyardMenu : MonoBehaviour
         }
 
         if (PersistentGameManager.Instance == null) return;
-
         Debug.Log(text.text);
-
         string sceneToLoad = GetSceneNameForText(text.text);
         PersistentGameManager.Instance.LoadSceneWithFade(sceneToLoad);
     }
 
     string GetSceneNameForText(string buttonText)
     {
-       
         switch (buttonText.Replace(" ", ""))
         {
             case "Level1": return PersistentGameManager.Instance.Level1Scene;
             case "Level2": return PersistentGameManager.Instance.Level2Scene;
             case "Level3": return PersistentGameManager.Instance.Level3Scene;
-            default: return buttonText; 
+            default: return buttonText;
         }
     }
 
     void ResetHover()
     {
         if (hoveredText == null) return;
-
-        if (LevelUnlocks.IsLevelUnlocked(hoveredText.text))
+        bool isInteractable = LevelUnlocks.IsLevelUnlocked(hoveredText.text) || hoveredText.text == "Credits";
+        if (isInteractable)
             SetNormalAppearance(hoveredText);
         else
             SetLockedAppearance(hoveredText);
-
         hoveredText = null;
     }
 
@@ -127,9 +126,6 @@ public class GraveyardMenu : MonoBehaviour
         mat.SetColor("_EmissionColor", Color.black);
     }
 
-  
-
-   
     public void Quit()
     {
 #if UNITY_EDITOR
@@ -137,7 +133,5 @@ public class GraveyardMenu : MonoBehaviour
 #else
         Application.Quit();
 #endif
-    
-}
-
+    }
 }
