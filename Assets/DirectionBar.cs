@@ -43,6 +43,7 @@ public class DirectionBar : MonoBehaviour
     {
         if (currentTarget == null) return;
 
+
         Vector3 toTarget = currentTarget.position - player.position;
         toTarget.y = 0f;
 
@@ -51,11 +52,15 @@ public class DirectionBar : MonoBehaviour
         float targetX = normalized * barHalfWidth;
 
         Vector2 current = dot.anchoredPosition;
+
+
         dot.anchoredPosition = Vector2.Lerp(
             current,
             new Vector2(targetX, current.y),
             Time.deltaTime * smoothSpeed
         );
+
+        Debug.Log(dot.anchoredPosition.x);
     }
 
     //void UpdateFlicker()

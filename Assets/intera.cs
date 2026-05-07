@@ -30,16 +30,17 @@ public class intera : MonoBehaviour
 
     void Start()
     {
-        doorScript = Door.GetComponent<DoubleGateDoor>();
-        doorScript2 = Door2.GetComponent<DoubleGateDoor>();
-        keycheck.SetActive(false);
+        if (Door != null) doorScript = Door.GetComponent<DoubleGateDoor>();
+        if (Door2 != null) doorScript2 = Door2.GetComponent<DoubleGateDoor>();
+
+        if (keycheck != null) keycheck.SetActive(false);
     }
 
     
 
     void Update()
     {
-       
+
         if (nearbyKey != null && Input.GetKeyDown(KeyCode.E))
         {
             if (nearbyKey.CompareTag("Key1"))
@@ -75,7 +76,7 @@ public class intera : MonoBehaviour
             pickupUI = null;
         }
 
-       
+
         if (nearbyDoor != null && Input.GetKeyDown(KeyCode.E))
         {
             DoubleGateDoor doorSc = nearbyDoor.GetComponentInParent<DoubleGateDoor>();

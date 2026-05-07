@@ -12,11 +12,16 @@ public class GraveyardMenu : MonoBehaviour
     public Color lockedColor = new Color(0.4f, 0, 0);
     public AudioClip hoverSound;
     public AudioClip lockedSound;
-    public credits creditsScript; // Assign in Inspector
+    public credits creditsScript;
+    public GameObject instructions1Object; // Assign in Inspector
+    public GameObject instructions2Object; // Assign in Inspector
     private TextMeshPro hoveredText;
 
     void Start()
     {
+        if (instructions1Object) instructions1Object.SetActive(false);
+        if (instructions2Object) instructions2Object.SetActive(false);
+
         TextMeshPro[] allTexts = FindObjectsOfType<TextMeshPro>();
         foreach (TextMeshPro text in allTexts)
         {
@@ -30,16 +35,33 @@ public class GraveyardMenu : MonoBehaviour
 
     void Update()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit, rayDistance))
+        // Click anywhere to close instruction panels
+        if (Input.GetMouseButtonDown(0))
         {
-            TextMeshPro text = hit.collider.GetComponent<TextMeshPro>();
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit, rayDistance))
+            {
+                TextMeshPro text = hit.collider.GetComponent<TextMeshPro>();
+                if (text != null)
+                {
+                    HandleClick(text, hit.point);
+                    return;
+                }
+            }
+            // Clicked on nothing — close panels
+            if (instructions1Object && instructions1Object.activeSelf)
+                instructions1Object.SetActive(false);
+            if (instructions2Object && instructions2Object.activeSelf)
+                instructions2Object.SetActive(false);
+        }
+
+        Ray hoverRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(hoverRay, out RaycastHit hoverHit, rayDistance))
+        {
+            TextMeshPro text = hoverHit.collider.GetComponent<TextMeshPro>();
             if (text != null)
             {
-                Debug.Log(text.text);
-                HandleHover(text, hit.point);
-                if (Input.GetMouseButtonDown(0))
-                    HandleClick(text, hit.point);
+                HandleHover(text, hoverHit.point);
                 return;
             }
         }
@@ -52,8 +74,11 @@ public class GraveyardMenu : MonoBehaviour
         ResetHover();
         hoveredText = text;
 
-        // Treat Credits as unlocked for hover purposes
-        bool isInteractable = LevelUnlocks.IsLevelUnlocked(text.text) || text.text == "Credits";
+        bool isInteractable = LevelUnlocks.IsLevelUnlocked(text.text)
+            || text.text == "Credits"
+            || text.text == "Instructions 1"
+            || text.text == "Instructions 2";
+
         if (isInteractable)
         {
             text.color = hoverColor;
@@ -64,14 +89,29 @@ public class GraveyardMenu : MonoBehaviour
 
     void HandleClick(TextMeshPro text, Vector3 hitPoint)
     {
-        // Credits button
         if (text.text == "Credits")
         {
             if (creditsScript != null)
                 creditsScript.turnOnScreen();
             return;
+        }
 
-            Debug.Log("idkman");
+        if (text.text == "Instructions 1")
+        {
+            if (instructions1Object)
+                instructions1Object.SetActive(!instructions1Object.activeSelf);
+            if (instructions2Object)
+                instructions2Object.SetActive(false);
+            return;
+        }
+
+        if (text.text == "Instructions 2")
+        {
+            if (instructions2Object)
+                instructions2Object.SetActive(!instructions2Object.activeSelf);
+            if (instructions1Object)
+                instructions1Object.SetActive(false);
+            return;
         }
 
         if (!LevelUnlocks.IsLevelUnlocked(text.text))
@@ -83,7 +123,6 @@ public class GraveyardMenu : MonoBehaviour
         }
 
         if (PersistentGameManager.Instance == null) return;
-        Debug.Log(text.text);
         string sceneToLoad = GetSceneNameForText(text.text);
         PersistentGameManager.Instance.LoadSceneWithFade(sceneToLoad);
     }
@@ -102,7 +141,11 @@ public class GraveyardMenu : MonoBehaviour
     void ResetHover()
     {
         if (hoveredText == null) return;
-        bool isInteractable = LevelUnlocks.IsLevelUnlocked(hoveredText.text) || hoveredText.text == "Credits";
+        bool isInteractable = LevelUnlocks.IsLevelUnlocked(hoveredText.text)
+            || hoveredText.text == "Credits"
+            || hoveredText.text == "Instructions 1"
+            || hoveredText.text == "Instructions 2";
+
         if (isInteractable)
             SetNormalAppearance(hoveredText);
         else
